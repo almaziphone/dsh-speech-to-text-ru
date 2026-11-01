@@ -265,6 +265,21 @@ Dev install from a checkout (`file://` module URL, no package install):
 dsh plugin --profile dev-profile add /path/to/checkout
 ```
 
+## Upstream / official bundle
+
+DeepSeek Harness' [`CONTRIBUTING.md`](https://github.com/deepseek-ai/deepseek-harness/blob/master/CONTRIBUTING.md)
+currently states that external pull requests are not accepted, so instead of opening a PR the
+integration proposal was posted in the project's discussions:
+
+- Upstream proposal (Ideas): https://github.com/deepseek-ai/deepseek-harness/discussions/11745
+- Plugin announcement (Show Your Plugins!): https://github.com/deepseek-ai/deepseek-harness/discussions/11746
+
+The implementation-ready change set — new `packages/experimental/speech-to-text-gigaam` package
+mirroring `speech-to-text-sensevoice`, the `voice-input-bundle` patch row, official-bundle
+manifests, docs and tests — is described in [docs/upstream.md](docs/upstream.md). If the project
+opens external contributions (or the maintainers ask for the code), the port is mechanical and
+this repository is the working prototype.
+
 ## Credits & licenses
 
 - **GigaAM-v3** — © SaluteDevices / Sber, MIT. ONNX conversion for sherpa-onnx by

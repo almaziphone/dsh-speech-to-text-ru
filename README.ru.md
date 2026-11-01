@@ -227,6 +227,20 @@ node scripts/transcribe.mjs --wav samples/16k.wav --model-dir ~/.dsh/speech-to-t
 dsh plugin --profile dev-profile add /path/to/checkout
 ```
 
+## Встраивание в DeepSeek Harness (upstream)
+
+`CONTRIBUTING.md` проекта сейчас прямо указывает, что внешние pull request'ы не принимаются,
+поэтому вместо PR предложение опубликовано в Discussions проекта:
+
+- Предложение по встраиванию (категория Ideas): https://github.com/deepseek-ai/deepseek-harness/discussions/11745
+- Анонс плагина (Show Your Plugins!): https://github.com/deepseek-ai/deepseek-harness/discussions/11746
+
+Готовый к переносу набор изменений — новый пакет `packages/experimental/speech-to-text-gigaam`
+по образцу `speech-to-text-sensevoice`, строка провайдера в `voice-input-bundle`, манифесты
+официальных бандлов, документация и тесты — описан в [docs/upstream.md](docs/upstream.md).
+Если проект откроет внешние контрибуции (или мейнтейнеры попросят код), порт механический:
+этот репозиторий — рабочий прототип.
+
 ## Благодарности и лицензии
 
 - **GigaAM-v3** — © SaluteDevices / Sber, MIT. ONNX-конвертация для sherpa-onnx —
