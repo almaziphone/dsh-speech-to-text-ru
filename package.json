@@ -1,0 +1,72 @@
+{
+  "name": "dsh-speech-to-text-ru",
+  "description": "Local Russian speech-to-text provider for DeepSeek Harness voice input (GigaAM-v3 NeMo CTC, Whisper fallback) — локальное распознавание русской речи",
+  "version": "0.1.0",
+  "icon": "./icon.svg",
+  "type": "module",
+  "main": "lib/index.js",
+  "sideEffects": false,
+  "exports": {
+    ".": "./lib/index.js",
+    "./worker": "./lib/worker.js",
+    "./package.json": "./package.json",
+    "./icon.svg": "./icon.svg",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "icon.svg",
+    "locale/*.json",
+    "lib/index.js",
+    "lib/worker.js",
+    "lib/config.js",
+    "lib/deadline.js",
+    "lib/language.js",
+    "lib/native.js",
+    "lib/wave.js",
+    "runtime/assets.json",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "dsh-bundle",
+    "deepseek-harness",
+    "voice-input",
+    "speech-to-text",
+    "asr",
+    "russian",
+    "gigaam",
+    "whisper",
+    "sherpa-onnx",
+    "распознавание речи"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/almaziphone/dsh-speech-to-text-ru.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "sherpa-onnx-node": "1.13.8"
+  },
+  "peerDependencies": {},
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "homepage": "https://github.com/almaziphone/dsh-speech-to-text-ru#readme",
+  "bugs": {
+    "url": "https://github.com/almaziphone/dsh-speech-to-text-ru/issues"
+  },
+  "author": {
+    "name": "ALmAZ",
+    "url": "https://github.com/almaziphone"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

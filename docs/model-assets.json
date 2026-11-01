@@ -1,0 +1,192 @@
+{
+  "_schema": "machine-readable asset facts for the DSH 'Voice input' Russian ASR provider; verified against the app's bundled sherpa-onnx-node 1.13.8 (darwin-arm64) by teammate asr-model-ru",
+  "verifiedAt": "2026-11-01",
+  "runtime": {
+    "package": "sherpa-onnx-node",
+    "version": "1.13.8",
+    "gitSha1": "11afbd00",
+    "gitDate": "Thu Sep 10 13:52:45 2026",
+    "onnxruntimeVersion": "1.28.2",
+    "nativePackage": "sherpa-onnx-darwin-arm64",
+    "nativeAddonBytes": 659136,
+    "layoutNote": "The JS package resolves the native addon from a SIBLING directory ../sherpa-onnx-darwin-arm64/sherpa-onnx.node (flat node_modules layout, as shipped in the app bundle). No DYLD_LIBRARY_PATH is required in that layout; verified working with plain `require('sherpa-onnx-node')`.",
+    "sampleRate": 16000,
+    "channels": 1,
+    "sampleFormat": "s16le PCM"
+  },
+  "provider": "gigaam-ru",
+  "engine": "nemo-ctc",
+  "repo": "Smirnov75/GigaAM-v3-sherpa-onnx",
+  "revision": "6888903da215c7735f51101d939f3bfa679fb2b8",
+  "model": {
+    "file": "model.onnx",
+    "sourceFile": "gigaam_v3_e2e_ctc_int8.onnx",
+    "url": "https://huggingface.co/Smirnov75/GigaAM-v3-sherpa-onnx/resolve/6888903da215c7735f51101d939f3bfa679fb2b8/gigaam_v3_e2e_ctc_int8.onnx",
+    "bytes": 319869121,
+    "sha256": "0aacb41f70f0f5aaac4b45dd430337b9e16b180f22c72af04db8516e7609c3c0",
+    "quantized": "int8"
+  },
+  "tokens": {
+    "file": "tokens.txt",
+    "sourceFile": "gigaam_v3_e2e_ctc_tokens.txt",
+    "url": "https://huggingface.co/Smirnov75/GigaAM-v3-sherpa-onnx/resolve/6888903da215c7735f51101d939f3bfa679fb2b8/gigaam_v3_e2e_ctc_tokens.txt",
+    "bytes": 2006,
+    "sha256": "f8eb9b115e2748db9c40a5897cae11dd0678cc0b40fd7e25f8c43b3bf28715e4",
+    "numTokens": 256,
+    "script": "russian subword (▁ sentencepiece style), includes punctuation and ITN support"
+  },
+  "vad": {
+    "file": "silero_vad.onnx",
+    "url": "https://huggingface.co/csukuangfj/vad/resolve/fba88cd2e921609e7675c3aaf51e0b9b295da4bc/silero_vad.onnx",
+    "bytes": 1807522,
+    "sha256": "a35ebf52fd3ce5f1469b2a36158dba761bc47b973ea3382b3186ca15b1f5af28",
+    "revision": "fba88cd2e921609e7675c3aaf51e0b9b295da4bc",
+    "verified": true,
+    "note": "sha256 matches the value quoted in the task spec exactly; revision equals current repo main."
+  },
+  "languages": ["ru", "en"],
+  "languageSupport": {
+    "ru": "native, primary language; high quality",
+    "en": "partial: transcribes English but with frequent spelling/casing errors (\"Fridey\", \"Autornoon\"); not production quality",
+    "codeMixRuEn": "poor: English words are rendered phonetically in Cyrillic (\"коуд ревью\", \"пол-реквеt\")",
+    "emptyNoSpeech": "returns empty string on silence (no hallucination); pure noise returns \".\""
+  },
+  "autoLanguage": "",
+  "autoLanguageNote": "GigaAM nemo-ctc has NO language switch at all; the field is not sent to the model. Set autoLanguage to the empty string so the plugin can represent 'auto' uniformly with whisper. For the whisper fallback engine, sherpa-onnx accepts ONLY \"\" for auto-detect: \"auto\" and \"Auto\" abort the process (exit 134, 'Invalid language: auto') and CANNOT be caught from JS. Never forward the literal string \"auto\" to the native layer.",
+  "recommended": {
+    "threads": 2,
+    "sampleRate": 16000,
+    "provider": "cpu",
+    "decodingMethod": "greedy_search",
+    "featConfig": { "sampleRate": 16000, "featureDim": 80 },
+    "minSafeSamples": 160,
+    "minSafeSamplesNote": "decode() ABORTS the process (SIGABRT/134, 'Invalid input shape: {0}') for waveforms shorter than 160 samples (10 ms @16 kHz). Observed crash at 0, 1 and 16 samples; 160 samples is safe. Guard before creating a stream.",
+    "vad": {
+      "threshold": 0.5,
+      "minSilenceDuration": 0.5,
+      "minSpeechDuration": 0.25,
+      "windowSize": 512,
+      "maxSpeechDuration": 20,
+      "padBeforeSec": 0.4,
+      "padAfterSec": 0.2,
+      "note": "With minSilenceDuration<=0.25 the VAD over-segments running dictation and clips word onsets (\"Надиктуй\"->\"Диктуй\", 15:30 split into 'Пятнадцать часов' + '30 минут'). At 0.5 with 0.4 s pre-padding / 0.2 s post-padding around segment boundaries, the same audio yields 2 correct segments with full words and correct 15:30 ITN."
+    }
+  },
+  "modelConfigSnippet": {
+    "modelConfig": {
+      "nemoCtc": { "model": "<models-dir>/gigaam-v3/model.onnx" },
+      "tokens": "<models-dir>/gigaam-v3/tokens.txt",
+      "numThreads": 2,
+      "provider": "cpu",
+      "debug": 0
+    },
+    "featConfig": { "sampleRate": 16000, "featureDim": 80 },
+    "decodingMethod": "greedy_search",
+    "maxActivePaths": 4,
+    "hotwordsFile": "",
+    "hotwordsScore": 1.5,
+    "ruleFsts": "",
+    "ruleFars": "",
+    "blankPenalty": 0
+  },
+  "measured": {
+    "loadMs": { "coldDiskMs": 590, "warmMs": 360, "medianWarmMs": 363, "samples": 5 },
+    "peakRssBytes": 591413248,
+    "peakRssMB": 564,
+    "rssAfterLoadMB": 545,
+    "rssModelDeltaMB": 497,
+    "rtf": { "threads2": 0.0171, "threads4": 0.0135 },
+    "decodeMs": {
+      "3.29sClip": { "threads2": 84, "threads4": 50 },
+      "8.39sClip": { "threads2": 111, "threads4": 109 },
+      "25.17sClip": { "threads2": 418, "threads4": 296 }
+    },
+    "accuracy": {
+      "scoredClips": 5,
+      "exactNormalizedMatches": 4,
+      "corpusWer": 0.0303,
+      "werAfterIgnoreItnOnlyDiff": 0.0,
+      "note": "The single 'word error' is pure inverse-text-normalization formatting: expected 'в девять утра', recognized 'в 9:00 утра'. No lexical errors were observed on the 5 Russian clips."
+    },
+    "punctuationAndCasing": "present: sentence capitalization, '.', ',', '?', '!', ':' and §-quotes are emitted; occasional imperfect punctuation (':'->'.', quotes added around a quoted clause). ITN converts spoken times to digits ('15:30', '9:00')."
+  },
+  "fp32Variant": {
+    "file": "gigaam_v3_e2e_ctc.onnx",
+    "url": "https://huggingface.co/Smirnov75/GigaAM-v3-sherpa-onnx/resolve/6888903da215c7735f51101d939f3bfa679fb2b8/gigaam_v3_e2e_ctc.onnx",
+    "bytes": 885950432,
+    "tested": false,
+    "reason": "Not downloaded/tested: int8 is already accurate enough that remaining error is ITN formatting only (corpus WER 3.03%, 0 lexical errors), and int8 saves 566 MB of download and ~0.5 GB of RAM. fp32 is a drop-in same-config replacement if int8 ever regresses."
+  },
+  "fallback": {
+    "provider": "whisper-small-multilingual",
+    "engine": "whisper",
+    "repo": "csukuangfj/sherpa-onnx-whisper-small",
+    "revision": "8f3c18b358db4d1f2fc1eae49d75cd20989e4309",
+    "encoder": {
+      "file": "small-encoder.int8.onnx",
+      "url": "https://huggingface.co/csukuangfj/sherpa-onnx-whisper-small/resolve/8f3c18b358db4d1f2fc1eae49d75cd20989e4309/small-encoder.int8.onnx",
+      "bytes": 112442483,
+      "sha256": "4cbe7b22fa9026b843b60a68640c747de05bafb1a11b57edc0e66c232d9f33a9"
+    },
+    "decoder": {
+      "file": "small-decoder.int8.onnx",
+      "url": "https://huggingface.co/csukuangfj/sherpa-onnx-whisper-small/resolve/8f3c18b358db4d1f2fc1eae49d75cd20989e4309/small-decoder.int8.onnx",
+      "bytes": 262226114,
+      "sha256": "acad50b5c782696e91b55914cc5ab4f756f1532f76e22aa6fc615f39fb69a8ee"
+    },
+    "tokens": {
+      "file": "small-tokens.txt",
+      "url": "https://huggingface.co/csukuangfj/sherpa-onnx-whisper-small/resolve/8f3c18b358db4d1f2fc1eae49d75cd20989e4309/small-tokens.txt",
+      "bytes": 816730,
+      "sha256": "b34b360dbb493e781e479794586d661700670d65564001f23024971d1f2fa126"
+    },
+    "languages": ["auto (\"\"), ru, en, +99 whisper languages"],
+    "autoLanguage": "",
+    "autoLanguageWarning": "\"auto\" and \"Auto\" are FATAL in sherpa-onnx 1.13.8 (native abort, exit 134). Only \"\" means auto-detect.",
+    "modelConfigSnippet": {
+      "modelConfig": {
+        "whisper": {
+          "encoder": "<models-dir>/whisper-small/small-encoder.int8.onnx",
+          "decoder": "<models-dir>/whisper-small/small-decoder.int8.onnx",
+          "language": "ru",
+          "task": "transcribe",
+          "tailPaddings": -1
+        },
+        "tokens": "<models-dir>/whisper-small/small-tokens.txt",
+        "numThreads": 2,
+        "provider": "cpu"
+      },
+      "featConfig": { "sampleRate": 16000, "featureDim": 80 },
+      "decodingMethod": "greedy_search"
+    },
+    "measured": {
+      "loadMs": 612,
+      "peakRssBytes": 1470087168,
+      "peakRssMB": 1402,
+      "rtf": { "threads2": 0.26, "threads4": 0.264 },
+      "accuracy": {
+        "scoredClips": 5,
+        "exactNormalizedMatches": 2,
+        "corpusWer": 0.1364,
+        "note": "Lexical errors: 'Надиктуй'->'На диктую', 'напомни'->'напомним', truncated final word in clip4 ('до конца' missing 'недели'), 'Ханты-Мансийска'->'Ханты Мансиска'."
+      },
+      "punctuationAndCasing": "present, comparable to GigaAM.",
+      "autoDetect": "language \"\" and \"ru\" produced byte-identical Russian transcripts on the test set."
+    },
+    "downloadBytes": 375485327
+  },
+  "downloads": {
+    "recommendedTotalBytes": 321676649,
+    "downloadsPerformedBytes": 697163918,
+    "budgetBytes": 1400000000,
+    "note": "All sizes verified byte-for-byte against the expected values in the task spec."
+  },
+  "files": [
+    { "path": "models/gigaam-v3/gigaam_v3_e2e_ctc_int8.onnx", "bytes": 319869121, "sha256": "0aacb41f70f0f5aaac4b45dd430337b9e16b180f22c72af04db8516e7609c3c0" },
+    { "path": "models/gigaam-v3/gigaam_v3_e2e_ctc_tokens.txt", "bytes": 2006, "sha256": "f8eb9b115e2748db9c40a5897cae11dd0678cc0b40fd7e25f8c43b3bf28715e4" },
+    { "path": "models/vad/silero_vad.onnx", "bytes": 1807522, "sha256": "a35ebf52fd3ce5f1469b2a36158dba761bc47b973ea3382b3186ca15b1f5af28" },
+    { "path": "models/whisper-small/small-encoder.int8.onnx", "bytes": 112442483, "sha256": "4cbe7b22fa9026b843b60a68640c747de05bafb1a11b57edc0e66c232d9f33a9" },
+    { "path": "models/whisper-small/small-decoder.int8.onnx", "bytes": 262226114, "sha256": "acad50b5c782696e91b55914cc5ab4f756f1532f76e22aa6fc615f39fb69a8ee" },
+    { "path": "models/whisper-small/small-tokens.txt", "bytes": 816730, "sha256": "b34b360dbb493e781e479794586d661700670d65564001f23024971d1f2fa126" }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Russian speech recognition",
+    "description": "Transcribe Russian voice input locally with GigaAM-v3 (Whisper fallback); models download on first use"
+  }
+}

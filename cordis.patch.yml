@@ -1,0 +1,30 @@
+# Bundle patch layer for the local Russian recognizer (packaged / registry install).
+#
+# This file is applied when the package is installed as a DSH bundle: the loader
+# resolves `name: 'dsh-speech-to-text-ru'` through the profile's node_modules. It is
+# NOT the file-URL form used for a dev checkout; see the README for that variant.
+#
+# Requirements and ordering:
+# - The shipped voice-input bundle (`@deepseek-ai/dsh-experimental-voice-input-bundle`)
+#   must be enabled first so the `speech-to-text` service row exists. Bundle layers are
+#   applied in the order the profile lists them, after which the user's own
+#   cordis.patch.yml is applied — the user patch always wins over this layer.
+# - Model weights are not part of the package; the provider downloads and verifies the
+#   pinned assets into `dataRoot` on first explicit preparation.
+
+# 1) Register the Russian provider next to the shipped SenseVoice provider.
+#    `dshHomePath` resolves to an absolute path under the Harness home, e.g.
+#    ~/.dsh/speech-to-text/gigaam-ru/models/gigaam-v3/model.onnx
+- insert:
+    - id: speech-to-text-gigaam
+      name: 'dsh-speech-to-text-ru'
+      config:
+        dataRoot: !!js dshHomePath('speech-to-text', 'gigaam-ru')
+
+# 2) Make the Russian recognizer the default selection for the voice service.
+#    This layer wins over the voice-input bundle's `sensevoice-local` default (it is
+#    applied later), but a user's own profile patch can still override it.
+- id: speech-to-text
+  config:
+    defaultProvider: gigaam-ru
+    language: ru
