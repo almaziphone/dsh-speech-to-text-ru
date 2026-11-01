@@ -47,30 +47,43 @@ ships. No cloud, no API keys, no Python, no extra services.
 
 ## Install
 
-The bundle is installed into a DSH profile (the desktop app uses the `desktop` profile):
+> **Order matters.** Enable the built-in **Voice input** first, then add this bundle. DSH applies
+> bundle patches in `dsh.profile.bundles` order, so the Russian bundle has to sit *after* the
+> voice-input bundle to make itself the default recognizer. The one-command installer below does
+> this for you; with the manual route, pick **GigaAM-v3 · RU (int8)** once in Settings if the order
+> was the other way round (DSH persists the selection), or append the small patch block that
+> `scripts/install.sh` writes.
+
+### One command (recommended)
 
 ```bash
-# straight from GitHub, no tarball needed
-dsh plugin --profile desktop add github:almaziphone/dsh-speech-to-text-ru
+git clone https://github.com/almaziphone/dsh-speech-to-text-ru
+cd dsh-speech-to-text-ru
+./scripts/install.sh
 ```
 
-`dsh` is the CLI that ships with DSH Desktop
-(`/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh` on macOS; add it to
-`PATH` or call it by full path). The command runs `pnpm add`, installs the pinned
-`sherpa-onnx-node@1.13.8` runtime for your platform, selects the bundle in the profile and applies
-its `cordis.patch.yml`.
+The script uses the `dsh` CLI that ships with DSH Desktop, backs up the profile, enables **Voice
+input**, installs/selects this bundle (`dsh plugin add`, so pnpm pulls the pinned
+`sherpa-onnx-node@1.13.8` runtime for your platform) and pins `defaultProvider: gigaam-ru`,
+`language: ru` in the profile patch — so later toggling cannot change the default.
 
-Then, if it is not enabled yet:
+### Manual
 
-1. Open **Plugins** in the DSH sidebar and switch **Voice input** on — this adds the microphone
-   UI, the `speechToText` service and its settings (the Russian bundle needs that service to
-   exist before its provider can register).
-2. Refresh the app window (`Cmd+R` / `Ctrl+R`) if the microphone button is not visible yet.
-3. Open **Settings → Voice input**. The recognizer should already be **GigaAM-v3 · RU (int8)**
-   with language **ru** (the bundle patch sets both as the default; the voice-input bundle's own
-   default `sensevoice-local` stays available).
+1. In DSH open **Plugins** and switch **Voice input** on — that adds the microphone UI, the
+   `speechToText` service and its settings.
+2. Add the bundle (the `dsh` CLI is
+   `/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh` on macOS; add it to
+   `PATH` or call it by full path):
 
-Other install sources:
+   ```bash
+   dsh plugin --profile desktop add github:almaziphone/dsh-speech-to-text-ru
+   ```
+
+3. Refresh the app window (`Cmd+R` / `Ctrl+R`). Open **Settings → Voice input**: the recognizer
+   should be **GigaAM-v3 · RU (int8)** with language **ru**. If it is not (for example you enabled
+   Voice input after installing the bundle), select it once — DSH stores the choice per profile.
+
+Other sources:
 
 ```bash
 dsh plugin --profile desktop add ./dsh-speech-to-text-ru-0.1.0.tgz   # release tarball

@@ -39,29 +39,43 @@ DSH. Без облака, API-ключей, Python и отдельных сер�
 
 ## Установка
 
-Бандл ставится в профиль DSH (десктопное приложение использует профиль `desktop`):
+> **Порядок важен.** Сначала включите штатный **Voice input**, потом добавляйте этот бандл.
+> DSH применяет патчи бандлов в порядке `dsh.profile.bundles`, и русский бандл должен идти
+> *после* voice-input, чтобы стать распознавателем по умолчанию. Скрипт ниже делает это
+> автоматически; при ручной установке в обратном порядке просто выберите **GigaAM-v3 · RU (int8)**
+> один раз в настройках — DSH запомнит выбор (либо добавьте блок патча, который пишет
+> `scripts/install.sh`).
+
+### Одна команда (рекомендуется)
 
 ```bash
-# прямо из GitHub, без скачивания архивов
-dsh plugin --profile desktop add github:almaziphone/dsh-speech-to-text-ru
+git clone https://github.com/almaziphone/dsh-speech-to-text-ru
+cd dsh-speech-to-text-ru
+./scripts/install.sh
 ```
 
-`dsh` — CLI, который поставляется вместе с DSH Desktop
-(`/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh` на macOS; добавьте
-его в `PATH` или вызывайте по полному пути). Команда выполнит `pnpm add`, поставит закреплённый
-`sherpa-onnx-node@1.13.8` под вашу платформу, выберет бандл в профиле и применит его
-`cordis.patch.yml`.
+Скрипт использует CLI `dsh`, поставляемый с DSH Desktop, делает бэкап профиля, включает
+**Voice input**, ставит и выбирает бандл (`dsh plugin add` — pnpm подтянет закреплённый
+`sherpa-onnx-node@1.13.8` под вашу платформу) и фиксирует `defaultProvider: gigaam-ru`,
+`language: ru` в патче профиля — поэтому дальнейшие переключения бандлов не собьют умолчание.
 
-Дальше, если ещё не включено:
+### Вручную
 
-1. Откройте **Plugins** в боковой панели DSH и включите **Voice input** — появятся кнопка
-   микрофона, сервис `speechToText` и его настройки (русскому провайдеру нужен этот сервис,
-   чтобы зарегистрироваться).
-2. Обновите окно приложения (`Cmd+R` / `Ctrl+R`), если кнопки микрофона ещё нет.
-3. **Settings → Voice input**. Распознаватель должен быть уже **GigaAM-v3 · RU (int8)**,
-   язык — **ru** (бандл ставит их по умолчанию; штатный `sensevoice-local` остаётся доступным).
+1. В DSH откройте **Plugins** и включите **Voice input** — появятся кнопка микрофона, сервис
+   `speechToText` и его настройки.
+2. Добавьте бандл (CLI `dsh` на macOS —
+   `/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh`; добавьте в `PATH`
+   или вызывайте по полному пути):
 
-Другие источники установки:
+   ```bash
+   dsh plugin --profile desktop add github:almaziphone/dsh-speech-to-text-ru
+   ```
+
+3. Обновите окно (`Cmd+R` / `Ctrl+R`), откройте **Settings → Voice input**: распознаватель
+   должен быть **GigaAM-v3 · RU (int8)**, язык — **ru**. Если нет (например, Voice input
+   включили после установки бандла) — выберите его один раз, DSH запомнит выбор в профиле.
+
+Другие источники:
 
 ```bash
 dsh plugin --profile desktop add ./dsh-speech-to-text-ru-0.1.0.tgz   # архив из Releases
