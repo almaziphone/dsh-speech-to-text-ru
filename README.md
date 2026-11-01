@@ -57,6 +57,10 @@ ships. No cloud, no API keys, no Python, no extra services.
 ### One command (recommended)
 
 ```bash
+# one line, no clone needed:
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/almaziphone/dsh-speech-to-text-ru/main/scripts/install.sh)" install.sh
+
+# or from a clone (add `--spec .` to install the checkout itself instead of GitHub):
 git clone https://github.com/almaziphone/dsh-speech-to-text-ru
 cd dsh-speech-to-text-ru
 ./scripts/install.sh

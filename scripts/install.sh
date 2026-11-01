@@ -1,8 +1,8 @@
 #!/bin/bash
 # Install this Russian speech-to-text bundle into a DSH profile.
 #
-#   scripts/install.sh                                   # from this checkout (dev/local)
-#   scripts/install.sh --spec github:almaziphone/dsh-speech-to-text-ru
+#   scripts/install.sh                                   # installs from GitHub (default)
+#   scripts/install.sh --spec .                          # from this checkout (dev/local)
 #   scripts/install.sh --spec ./dsh-speech-to-text-ru-0.1.0.tgz
 #
 # The script does, in order (this order matters for DSH bundle precedence):
@@ -18,7 +18,7 @@ set -euo pipefail
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROFILE="${DSH_PROFILE:-desktop}"
 DSH_CLI="${DSH_CLI:-}"
-SPEC=""
+SPEC="github:almaziphone/dsh-speech-to-text-ru"
 MARKER="# >>> dsh-speech-to-text-ru default selection"
 END_MARKER="# <<< dsh-speech-to-text-ru default selection"
 while [ $# -gt 0 ]; do
@@ -29,7 +29,6 @@ while [ $# -gt 0 ]; do
     *) echo "unknown option: $1" >&2; exit 2 ;;
   esac
 done
-[ -n "$SPEC" ] || SPEC="$REPO"
 
 if [ -z "$DSH_CLI" ]; then
   for candidate in \
@@ -82,6 +81,8 @@ python3 - "$PATCH" "$MARKER" "$END_MARKER" <<'PY'
 import os, sys
 path, marker, end_marker = sys.argv[1:4]
 text = open(path).read()
+# A fresh profile patch is the literal empty list `[]`; it must be replaced, not appended to.
+text = "\n".join(line for line in text.splitlines() if line.strip() != "[]").rstrip()
 start = text.find(marker)
 if start != -1:
     end = text.find(end_marker, start)

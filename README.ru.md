@@ -49,6 +49,10 @@ DSH. Без облака, API-ключей, Python и отдельных сер�
 ### Одна команда (рекомендуется)
 
 ```bash
+# одной строкой, без клонирования:
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/almaziphone/dsh-speech-to-text-ru/main/scripts/install.sh)" install.sh
+
+# или из клона (`--spec .` — поставить сам клон вместо GitHub):
 git clone https://github.com/almaziphone/dsh-speech-to-text-ru
 cd dsh-speech-to-text-ru
 ./scripts/install.sh
